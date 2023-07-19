@@ -1,9 +1,16 @@
-import { Router } from 'express';
-var router = Router();
+import express from "express";
+const router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+// Import paths of the specific routes
+import userRoutes from "./userRoutes.js";
+
+// Middleware to use for all routes
+router.use((req, res, next) => {
+    console.log("Time: ", Date.now());
+    next();
 });
+
+// Routes
+router.use("/users", userRoutes);
 
 export default router;
