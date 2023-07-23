@@ -197,4 +197,46 @@ const resetPassword = asyncHandler(async(req, res) => {
     )
 
 
-export { authUser, registerUser, updateUser, mailForPasswordReset, resetPassword, getUserProfile};
+    // @desc Logout user
+    // @route   POST /users/logout
+    // @access  Private
+
+    const logoutUser = asyncHandler(async(req, res) => {
+        try{
+            const {email} = req.body;
+            
+            const user = await User.findOne({email});
+
+            if(user) {
+                user.tokens = [];
+                await user.save();
+                res.status(200).json({message: "User logged out."});
+            } else {
+                res.status(401);
+                throw new Error("User not found.");
+            }
+        } catch(err) {
+            res.status(401);
+            throw new Error("Could not log out. Please retry.");
+        }
+    });
+    
+
+    // @desc Delete user
+    // @route   DELETE /users/:id
+    // @access  Private
+
+    const deleteUser = asyncHandler(async (req, res) => {
+      
+        try {
+                await User.findByIdAndDelete(req.user._id);
+                res.status(200).json({message: "User deleted."});
+        } catch (error) {
+            res.status(404);
+            throw new Error("User not found.");
+        }
+    })
+
+
+
+export { authUser, registerUser, updateUser, mailForPasswordReset, resetPassword, getUserProfile,logoutUser,deleteUser};

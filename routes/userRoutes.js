@@ -1,5 +1,5 @@
 import express from "express";
-import { authUser, registerUser, updateUser, getUserProfile,mailForPasswordReset,resetPassword } from "../controllers/userController.js";
+import { authUser, registerUser, updateUser, getUserProfile,mailForPasswordReset,resetPassword,logoutUser,deleteUser } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -13,5 +13,11 @@ router.route("/reset").post(mailForPasswordReset).put(resetPassword);
 
 router.route("/profile")
     .get(protect, getUserProfile)
-    .put(protect, updateUser);
+    .put(protect, updateUser)
+    .delete(protect, deleteUser);
+
+
+router.route("/logout").post(logoutUser);
+
+
 export default router;
