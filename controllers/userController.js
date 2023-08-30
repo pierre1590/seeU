@@ -238,5 +238,21 @@ const resetPassword = asyncHandler(async(req, res) => {
     })
 
 
+    // @desc Get all users with a search query
+    // @route   GET /users/search
+    // @access  Private
 
-export { authUser, registerUser, updateUser, mailForPasswordReset, resetPassword, getUserProfile,logoutUser,deleteUser};
+    const searchUsers = asyncHandler(async (req, res) => {
+        try {
+            const {searchQuery} = req.body;
+            const users = await User.find({fullname: {$regex: searchQuery, $options: "i"}});
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(404);
+            throw new Error("Users not found.");
+        }
+    })
+
+
+
+export { authUser, registerUser, updateUser, mailForPasswordReset, resetPassword, getUserProfile,logoutUser,deleteUser,searchUsers};
